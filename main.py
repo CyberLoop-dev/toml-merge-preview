@@ -30,6 +30,11 @@ def load_files(paths):
             layers.append((str(path), tomllib.load(handle)))
     return layers
 
+def json_value(value):
+    if hasattr(value, "isoformat"):
+        return value.isoformat()
+    raise TypeError(f"unsupported TOML value for JSON output: {type(value).__name__}")
+
 def main():
     parser = argparse.ArgumentParser(description="Preview a layered TOML merge; later files override earlier files.")
     parser.add_argument("files", nargs="+", help="TOML files in low-to-high precedence order")
@@ -40,7 +45,7 @@ def main():
     except (OSError, tomllib.TOMLDecodeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
-    print(json.dumps(merged, indent=2, sort_keys=True))
+    print(json.dumps(merged, indent=2, sort_keys=True, default=json_value))
     if args.trace:
         print("\nOverride trace:", file=sys.stderr)
         for item in trace:
