@@ -1,0 +1,6 @@
+[project]
+name = "toml-merge-preview"
+version = "1.0.0"
+description = "Preview layered TOML configuration merges"
+requires-python = ">=3.11"
+dependencies = []
